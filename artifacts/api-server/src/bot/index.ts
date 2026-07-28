@@ -141,22 +141,13 @@ export async function startBot(): Promise<void> {
       logger.info("Connecting to WhatsApp...");
 
       if (!state.creds.registered) {
+        // Pairing site mode: do NOT auto-request a code for the owner.
+        // Codes are only generated on-demand via POST /api/bot/pair.
+        // This prevents conflicting pairing attempts when a user requests
+        // their own code from the website.
         connectionStatus = "pairing";
-        logger.info("Not registered — auto-requesting pairing code for owner in 3s...");
-        setTimeout(async () => {
-          if (sock && !state.creds.registered) {
-            try {
-              const ownerNum = BOT_CONFIG.ownerNumber.replace(/[^0-9]/g, "");
-              const code = await sock.requestPairingCode(ownerNum);
-              pairingCode = code;
-              pendingPairPhone = ownerNum;
-              logger.info({ code }, `🔑 PAIRING CODE: ${code}`);
-              console.log(`\n\n🐍 VENOM MD PAIRING CODE: ${code}\n\nEnter this code in WhatsApp > Linked Devices > Link a Device\n`);
-            } catch (err: any) {
-              logger.warn({ err: err.message }, "Auto pairing code request failed");
-            }
-          }
-        }, 3000);
+        logger.info("Not registered — waiting for pairing code request from website...");
+        console.log(`\n🐍 VENOM MD ready — visit the pairing site to link a WhatsApp number.\n`);
       }
     }
 
