@@ -3,6 +3,8 @@ import {
   getConnectionStatus,
   getPairingCode,
   requestPairingCode,
+  getLatestSessionId,
+  getPendingPairPhone,
 } from "../bot/index.js";
 import { BOT_CONFIG } from "../bot/config.js";
 import { loadSessionById } from "../bot/session.js";
@@ -37,6 +39,16 @@ botRouter.post("/bot/pair", async (req, res) => {
   } catch (err: any) {
     res.status(500).json({ error: err.message });
   }
+});
+
+// GET /api/bot/session-id — return the short session ID after a successful pair
+botRouter.get("/bot/session-id", (_req, res) => {
+  const id = getLatestSessionId();
+  if (!id) {
+    res.status(404).json({ error: "No session ID yet. Bot has not paired yet." });
+    return;
+  }
+  res.json({ id, phone: getPendingPairPhone() });
 });
 
 // GET /api/bot/session/:id — fetch full session string by short ID

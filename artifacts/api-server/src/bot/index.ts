@@ -22,9 +22,14 @@ let connectionStatus: "connecting" | "open" | "close" | "pairing" = "connecting"
 /** Phone number that requested a user pairing (non-owner self-hosting flow) */
 let pendingPairPhone: string | null = null;
 
+/** Short session ID generated after a successful pairing (e.g. VENOM_AB12CD34) */
+let latestSessionId: string | null = null;
+
 export function getSocket(): WASocket | null { return sock; }
 export function getPairingCode(): string | null { return pairingCode; }
 export function getConnectionStatus() { return connectionStatus; }
+export function getLatestSessionId(): string | null { return latestSessionId; }
+export function getPendingPairPhone(): string | null { return pendingPairPhone; }
 
 export async function requestPairingCode(phoneNumber: string): Promise<string> {
   if (!sock) throw new Error("Bot not initialised");
@@ -45,6 +50,7 @@ async function sendSessionToUser(phone: string): Promise<void> {
 
   try {
     const sessionId = await saveSessionWithShortId(sessionPath);
+    latestSessionId = sessionId;
     const pairingSiteUrl = process.env.PAIRING_SITE_URL ?? "https://your-pairing-site.onrender.com";
     const jid = `${phone}@s.whatsapp.net`;
 

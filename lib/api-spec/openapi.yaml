@@ -3,13 +3,15 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Venom MD Bot API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: bot
+    description: Bot pairing and status
 paths:
   /healthz:
     get:
@@ -24,6 +26,78 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /bot/status:
+    get:
+      operationId: getBotStatus
+      tags: [bot]
+      summary: Get bot connection status
+      responses:
+        "200":
+          description: Bot status
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/BotStatus"
+  /bot/pair:
+    post:
+      operationId: requestPair
+      tags: [bot]
+      summary: Request a WhatsApp pairing code
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PairInput"
+      responses:
+        "200":
+          description: Pairing code generated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PairResult"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+        "500":
+          description: Server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+  /bot/session-id:
+    get:
+      operationId: getSessionId
+      tags: [bot]
+      summary: Get the latest session short ID after successful pairing
+      responses:
+        "200":
+          description: Session ID available
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SessionIdResult"
+        "404":
+          description: No session yet
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResult"
+  /bot/session:
+    delete:
+      operationId: clearSession
+      tags: [bot]
+      summary: Clear the current session so the bot can re-pair
+      responses:
+        "200":
+          description: Session cleared
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ClearResult"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +107,64 @@ components:
           type: string
       required:
         - status
-
+    BotStatus:
+      type: object
+      properties:
+        status:
+          type: string
+        connected:
+          type: boolean
+        pairingCode:
+          type: ["string", "null"]
+        botName:
+          type: string
+        owner:
+          type: string
+      required:
+        - status
+        - connected
+        - botName
+        - owner
+    PairInput:
+      type: object
+      properties:
+        phone:
+          type: string
+      required:
+        - phone
+    PairResult:
+      type: object
+      properties:
+        code:
+          type: string
+        phone:
+          type: string
+      required:
+        - code
+        - phone
+    SessionIdResult:
+      type: object
+      properties:
+        id:
+          type: string
+        phone:
+          type: ["string", "null"]
+      required:
+        - id
+    ClearResult:
+      type: object
+      properties:
+        success:
+          type: boolean
+        message:
+          type: string
+      required:
+        - success
+        - message
+    ErrorResult:
+      type: object
+      properties:
+        error:
+          type: string
+      required:
+        - error
