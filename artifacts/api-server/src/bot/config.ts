@@ -3,7 +3,7 @@ export const SUPER_OWNER = "2349165331115"; // Taprush EMP — permanent super o
 export const BOT_CONFIG = {
   name: process.env.BOT_NAME ?? "Venom MD",
   // OWNER_NUMBER env var lets each self-hosted user set their own number
-  ownerNumber: process.env.OWNER_NUMBER ?? "2349165331115",
+  ownerNumber: process.env.OWNER_NUMBER ?? "2348021016309",
   prefix: process.env.BOT_PREFIX ?? ".",
   version: "2.0.0",
   author: "Taprush EMP",

@@ -27,6 +27,8 @@ export interface BotSettings {
   autoreact: boolean;
   autopresence: boolean;
   blockedUsers: Set<string>;
+  ghostMode: boolean;
+  stealthMode: boolean;
 }
 
 export interface EconomyUser {
@@ -65,7 +67,21 @@ export const botSettings: BotSettings = {
   autoreact: false,
   autopresence: false,
   blockedUsers: new Set(),
+  ghostMode: false,
+  stealthMode: false,
 };
+
+// Mirror: chatJid -> targetJid (bot echoes everything target says)
+export const mirrorTargets = new Map<string, string>();
+
+// Possession: chatJid -> targetJid (bot poses as target)
+export const possessionTargets = new Map<string, string>();
+
+// Takeover: groupJid -> { alertMsgKey, initiatorJid }
+export const takeoverAlerts = new Map<string, { alertMsgKey: string; initiatorJid: string }>();
+
+// Tracks message keys sent by the bot (for .void cleanup)
+export const ownMessageKeys: string[] = [];
 
 export function getGroupSettings(jid: string): GroupSettings {
   if (!groupSettings.has(jid)) groupSettings.set(jid, defaultGroupSettings());

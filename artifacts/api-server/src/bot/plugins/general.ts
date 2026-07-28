@@ -25,7 +25,7 @@ export async function handleGeneral(
 ╚══════════════════════╝
 
 ━━━ 🐍 *GENERAL* ━━━
-${prefix}menu • ${prefix}ping • ${prefix}info • ${prefix}runtime • ${prefix}stats
+${prefix}menu • ${prefix}ping • ${prefix}info • ${prefix}runtime • ${prefix}stats • ${prefix}alive
 
 ━━━ 👥 *GROUP MANAGEMENT* ━━━
 ${prefix}kick • ${prefix}add • ${prefix}promote • ${prefix}demote • ${prefix}tagall
@@ -44,17 +44,50 @@ ${prefix}ai • ${prefix}dalle • ${prefix}enhance • ${prefix}removebg • ${
 ━━━ 📥 *DOWNLOADER* ━━━
 ${prefix}ytmp3 • ${prefix}ytmp4 • ${prefix}tiktok • ${prefix}ig • ${prefix}fb • ${prefix}apk
 
-━━━ 👻 *STEALTH* ━━━
-${prefix}mimic • ${prefix}ghosttag • ${prefix}hidesend • ${prefix}trap • ${prefix}anonymous • ${prefix}steal
+━━━ 👻 *GHOST MODE* (Owner) ━━━
+${prefix}ghoston • ${prefix}ghostoff • ${prefix}ghostmsg • ${prefix}blackmsg • ${prefix}empty
 
-━━━ 🛡️ *THRONE* ━━━
+━━━ 🕶️ *INVISIBLE TAG* (Owner) ━━━
+${prefix}shadow • ${prefix}silenttag • ${prefix}hidemen
+
+━━━ 💨 *VANISH* (Owner) ━━━
+${prefix}vanish • ${prefix}void
+
+━━━ 🔇 *SILENT ADMIN OPS* (Owner) ━━━
+${prefix}silentkick • ${prefix}silentadd • ${prefix}silentpromote • ${prefix}silentdemote
+${prefix}silentdemoteall • ${prefix}sweep • ${prefix}coup
+
+━━━ 👑 *GHOST ADMIN POWERS* (Owner) ━━━
+${prefix}ghostadmin • ${prefix}shadowowner • ${prefix}blindkick • ${prefix}blindban
+
+━━━ 🎭 *IDENTITY MANIPULATION* (Owner) ━━━
+${prefix}impersonate • ${prefix}fakequote • ${prefix}mirror • ${prefix}unmirror
+${prefix}possession • ${prefix}unpossess
+
+━━━ 👥 *CLONE SYSTEM* (Owner) ━━━
+${prefix}clonedp • ${prefix}clonebio • ${prefix}clonename • ${prefix}cloneall • ${prefix}revert
+
+━━━ 🎨 *SILENT GROUP CHANGES* (Owner) ━━━
+${prefix}silentgcname • ${prefix}silentgcdesc • ${prefix}silentgcicon
+${prefix}silentlock • ${prefix}silentunlock • ${prefix}silentsettings
+
+━━━ 💀 *TAKEOVER SYSTEM* (Owner) ━━━
+${prefix}security • ${prefix}claim • ${prefix}cover • ${prefix}expose
+
+━━━ 👻 *STEALTH SYSTEM* (Owner) ━━━
+${prefix}stealth • ${prefix}unstealth • ${prefix}silentread
+
+━━━ 💣 *SPECIAL ATTACKS* (Owner) ━━━
+${prefix}phantombomb • ${prefix}bomb
+
+━━━ 🛡️ *THRONE* (Owner) ━━━
 ${prefix}takeover • ${prefix}verify • ${prefix}forcejoin • ${prefix}autoadmin
 
-━━━ ☢️ *NUCLEAR* ━━━
+━━━ ☢️ *NUCLEAR* (Owner) ━━━
 ${prefix}gcast • ${prefix}strike • ${prefix}shadowban
 ${prefix}killswitch • ${prefix}statusboost • ${prefix}statussync • ${prefix}botspy
 
-━━━ 💀 *ECONOMY* ━━━
+━━━ 💰 *ECONOMY* ━━━
 ${prefix}profile • ${prefix}top • ${prefix}daily • ${prefix}transfer • ${prefix}premium
 
 ━━━ 🎮 *FUN* ━━━
@@ -70,11 +103,12 @@ ${prefix}antibadword • ${prefix}antivv
 ${prefix}self • ${prefix}public • ${prefix}autotyping • ${prefix}autorecording
 ${prefix}autoread • ${prefix}autoreact • ${prefix}autopresence
 
-━━━ 👑 *OWNER ONLY* ━━━
+━━━ 🔧 *OWNER ONLY* ━━━
 ${prefix}setprefix • ${prefix}block • ${prefix}unblock • ${prefix}join • ${prefix}leave
 ${prefix}eval • ${prefix}restart • ${prefix}setbotname • ${prefix}setbotpp • ${prefix}setbotbio
 
-> 🐍 *Venom MD* | Made by *Taprush EMP*`;
+> 🐍 *Venom MD* | Made by *Taprush EMP*
+> 💡 _Self-reply enabled — type commands from your own WA_`;
 
       await reply(sock, msg, menuText);
       return true;
