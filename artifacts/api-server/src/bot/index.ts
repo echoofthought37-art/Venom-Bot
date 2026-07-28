@@ -161,25 +161,62 @@ export async function startBot(): Promise<void> {
       logger.info("✅ Venom MD connected to WhatsApp!");
       console.log(`\n🐍 VENOM MD is ONLINE! Connected as ${botUser?.name ?? "unknown"}\n`);
 
-      // If a user (not the owner) just paired via the pairing site, send them their session string
+      // ── Set bot profile picture on first connect ──────────────────────
+      setTimeout(async () => {
+        try {
+          const { default: fs } = await import("fs");
+          const { default: path } = await import("path");
+          const iconPath = path.resolve("src/bot/assets/venom-bot-icon.png");
+          if (fs.existsSync(iconPath)) {
+            const buf = fs.readFileSync(iconPath);
+            await sock!.updateProfilePicture(sock!.user!.id, buf);
+            logger.info("🐍 Bot profile picture set.");
+          }
+        } catch (err: any) {
+          logger.warn({ err: err.message }, "Could not set bot profile picture");
+        }
+      }, 3000);
+
+      // ── Send startup welcome to owner ──────────────────────────────────
+      const ownerNum = BOT_CONFIG.ownerNumber.replace(/[^0-9]/g, "");
+      const ownerJid = `${ownerNum}@s.whatsapp.net`;
+
+      setTimeout(async () => {
+        try {
+          const uptime = new Date().toLocaleString("en-NG", { timeZone: "Africa/Lagos" });
+          await sock!.sendMessage(ownerJid, {
+            text:
+              `╔══════════════════════╗\n` +
+              `║  🐍 *VENOM MD ONLINE*  ║\n` +
+              `╚══════════════════════╝\n\n` +
+              `✅ *Bot connected successfully!*\n\n` +
+              `👤 *Connected as:* ${botUser?.name ?? "Venom MD"}\n` +
+              `👑 *Owner:* ${ownerNum}\n` +
+              `🔧 *Prefix:* \`${BOT_CONFIG.prefix}\`\n` +
+              `⚙️ *Mode:* PUBLIC\n` +
+              `🕐 *Time:* ${uptime}\n\n` +
+              `━━━━━━━━━━━━━━━━━━━━━━\n` +
+              `💡 *Self-reply is ON* — type commands\n` +
+              `   from your own WhatsApp anytime.\n\n` +
+              `Type \`${BOT_CONFIG.prefix}menu\` to see all commands.\n\n` +
+              `> 🐍 _Venom MD v2.0 | Taprush EMP_`,
+          });
+          logger.info({ ownerNum }, "Startup welcome sent to owner.");
+        } catch (err: any) {
+          logger.warn({ err: err.message }, "Could not send startup welcome to owner");
+        }
+      }, 5000);
+
+      // If a user paired via the pairing site, send them their session ID
       if (pendingPairPhone) {
-        const ownerNum = BOT_CONFIG.ownerNumber.replace(/[^0-9]/g, "");
         const superNum = SUPER_OWNER.replace(/[^0-9]/g, "");
 
-        // Send session string to anyone who paired (including owner for backup)
         setTimeout(() => {
           if (pendingPairPhone) {
             sendSessionToUser(pendingPairPhone);
             pendingPairPhone = null;
           }
-        }, 5000); // Small delay so connection is stable
-
-        // Greet the super owner if they just connected
-        if (botUser?.id?.includes(superNum)) {
-          await sock!.sendMessage(`${superNum}@s.whatsapp.net`, {
-            text: `🐍 *VENOM MD is now ONLINE*\n\nAll 114 commands active.\nPrefix: ${BOT_CONFIG.prefix}\n\nType ${BOT_CONFIG.prefix}menu to see all commands.`,
-          }).catch(() => {});
-        }
+        }, 8000);
       }
     }
 

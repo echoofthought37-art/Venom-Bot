@@ -47,3 +47,7 @@ Thumbs.db
 # Replit
 .cache/
 .local/
+
+# Bot session files (contain auth credentials — never commit)
+artifacts/api-server/session/
+session/
