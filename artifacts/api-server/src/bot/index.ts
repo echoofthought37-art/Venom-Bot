@@ -59,7 +59,7 @@ async function sendSessionToUser(phone: string): Promise<void> {
       `*${sessionId}*\n\n` +
       `━━━━━━━━━━━━━━━━━━━━\n` +
       `*To host your own bot:*\n\n` +
-      `1. Fork the repo: github.com/TaprushEMP/venom-md\n` +
+      `1. Fork the repo: github.com/echoofthought37-art/Venom-Bot\n` +
       `2. Go to render.com → New Web Service\n` +
       `3. Connect your fork\n` +
       `4. Add only *2 environment variables:*\n` +

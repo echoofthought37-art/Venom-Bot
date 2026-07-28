@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { useRequestPair, useGetBotStatus, useGetSessionId, useClearSession, getGetBotStatusQueryKey, getGetSessionIdQueryKey } from '@workspace/api-client-react';
+import { useRequestPair, useGetBotStatus, useClearSession, getGetBotStatusQueryKey } from '@workspace/api-client-react';
 import { useQueryClient } from '@tanstack/react-query';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { StepIndicator } from '@/components/step-indicator';
 import { CodeDisplay } from '@/components/code-display';
-import { Loader2, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Loader2, CheckCircle2, MessageCircle } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 
 export default function PairingPage() {
@@ -25,14 +25,6 @@ export default function PairingPage() {
       enabled: step === 2,
       refetchInterval: step === 2 ? 3000 : false,
       queryKey: getGetBotStatusQueryKey(),
-    },
-  });
-
-  // Get session ID when connected
-  const { data: sessionData } = useGetSessionId({
-    query: {
-      enabled: step === 3,
-      queryKey: getGetSessionIdQueryKey(),
     },
   });
 
@@ -205,49 +197,41 @@ export default function PairingPage() {
           </div>
         )}
 
-        {/* Step 3: Session ID Revealed */}
+        {/* Step 3: Success — Session ID sent to WhatsApp DM */}
         {step === 3 && (
           <div className="slide-up space-y-6">
             <div className="bg-card border border-primary/30 rounded-lg p-8 shadow-xl">
-              <div className="flex items-center justify-center gap-3 mb-6">
+              <div className="flex items-center justify-center gap-3 mb-4">
                 <CheckCircle2 className="w-8 h-8 text-primary" />
-                <h2 className="text-3xl font-bold text-primary">Connection Successful</h2>
+                <h2 className="text-3xl font-bold text-primary">Connected!</h2>
               </div>
 
-              <p className="text-center text-muted-foreground mb-8">
-                Your bot is paired. Use this session ID to deploy on Render.
-              </p>
-
-              <CodeDisplay 
-                code={sessionData?.id || 'Loading...'} 
-                label="Session ID" 
-                size="large"
-              />
-
-              <div className="mt-6 p-4 bg-accent/5 border border-accent/20 rounded-lg">
-                <p className="text-sm text-muted-foreground flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 mt-0.5 shrink-0 text-primary" />
-                  <span>
-                    The bot also sent this session ID directly to your WhatsApp.
-                  </span>
-                </p>
+              {/* WhatsApp DM notice */}
+              <div className="flex items-center justify-center gap-3 mt-6 mb-8 p-5 bg-primary/10 border border-primary/30 rounded-xl">
+                <MessageCircle className="w-7 h-7 text-primary shrink-0" />
+                <div>
+                  <p className="font-semibold text-foreground">Session ID sent to your WhatsApp</p>
+                  <p className="text-sm text-muted-foreground mt-0.5">
+                    Check your DMs from <span className="font-mono text-foreground">{phone}</span> — the bot just messaged you your <span className="font-mono text-primary">VENOM_XXXXXX</span> ID with full deploy instructions.
+                  </p>
+                </div>
               </div>
 
-              <div className="mt-8 space-y-4">
-                <h3 className="text-lg font-semibold">Deploy to Render</h3>
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold">Deploy to Render (quick reference)</h3>
                 <ol className="space-y-3 text-sm">
                   <li className="flex gap-3">
                     <span className="shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">1</span>
                     <span className="text-muted-foreground">
                       Fork the{' '}
-                      <a 
-                        href="https://github.com/taprushEMP/venom-md" 
-                        target="_blank" 
+                      <a
+                        href="https://github.com/echoofthought37-art/Venom-Bot"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline font-medium"
                         data-testid="link-github"
                       >
-                        Venom MD GitHub repository
+                        Venom MD GitHub repo
                       </a>
                     </span>
                   </li>
@@ -255,9 +239,9 @@ export default function PairingPage() {
                     <span className="shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">2</span>
                     <span className="text-muted-foreground">
                       Go to{' '}
-                      <a 
-                        href="https://render.com" 
-                        target="_blank" 
+                      <a
+                        href="https://render.com"
+                        target="_blank"
                         rel="noopener noreferrer"
                         className="text-primary hover:underline font-medium"
                         data-testid="link-render"
@@ -270,18 +254,16 @@ export default function PairingPage() {
                   <li className="flex gap-3">
                     <span className="shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">3</span>
                     <div className="text-muted-foreground space-y-2">
-                      <p>Add these environment variables:</p>
+                      <p>Add 2 environment variables:</p>
                       <div className="space-y-1 font-mono text-xs bg-muted/30 p-3 rounded border border-border">
-                        <div><span className="text-primary">SESSION_ID</span> = {sessionData?.id}</div>
-                        <div><span className="text-primary">OWNER_NUMBER</span> = {phone}</div>
+                        <div><span className="text-primary">SESSION_ID</span> = <span className="text-muted-foreground">(from your WhatsApp DM)</span></div>
+                        <div><span className="text-primary">OWNER_NUMBER</span> = <span className="text-foreground">{phone}</span></div>
                       </div>
                     </div>
                   </li>
                   <li className="flex gap-3">
                     <span className="shrink-0 w-6 h-6 rounded-full bg-primary/20 text-primary flex items-center justify-center text-xs font-bold">4</span>
-                    <span className="text-muted-foreground">
-                      Deploy — your bot is now live 24/7
-                    </span>
+                    <span className="text-muted-foreground">Click Deploy — your bot is live 24/7 🐍</span>
                   </li>
                 </ol>
               </div>
